@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import Home from "./Components/Home";
+import Navbar from "./Components/Navbar";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [tickets, setTickets] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [groupingOption, setGroupingOption] = useState("status");
+  const [sortingOption, setSortingOption] = useState("priority");
+
+  useEffect(() => {
+    fetch("https://api.quicksell.co/v1/internal/frontend-assignment")
+      .then((response) => response.json())
+      .then((data) => {
+        setTickets(data.tickets);
+        setUsers(data.users); // Assuming you also fetch users
+      });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar
+        onGroupingChange={setGroupingOption}
+        onSortingChange={setSortingOption}
+      />
+      <Home
+        tickets={tickets}
+        users={users}
+        groupingOption={groupingOption}
+        sortingOption={sortingOption}
+        onGroupingChange={setGroupingOption}
+        onSortingChange={setSortingOption}
+      />
     </div>
   );
-}
+};
 
 export default App;
